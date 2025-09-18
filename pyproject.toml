@@ -1,0 +1,11 @@
+[project]
+name = "fdic-failed-banks"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "jinja2>=3.1.6",
+    "livereload>=2.7.1",
+    "requests>=2.32.5",
+]

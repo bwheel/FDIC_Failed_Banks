@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Breadcrumbs -->
+<nav aria-label="breadcrumb" class="mt-2">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+    <li class="breadcrumb-item"><a href="../states/{{ bank.state }}.html">{{ bank.state }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ bank.name }}</li>
+  </ol>
+</nav>
+
+<h1 class="mt-3">{{ bank.name }}</h1>
+
+<ul class="list-unstyled">
+  <li><strong>City:</strong> {{ bank.city }}</li>
+  <li><strong>State:</strong> {{ bank.state }}</li>
+  <li><strong>Cert:</strong> {{ bank.cert }}</li>
+  <li><strong>Acquiring Institution:</strong> {{ bank.acquiring_institution }}</li>
+  <li><strong>Closing Date:</strong> {{ bank.closing_date }}</li>
+  <li><strong>Fund:</strong> {{ bank.fund }}</li>
+</ul>
+
+{% endblock %}

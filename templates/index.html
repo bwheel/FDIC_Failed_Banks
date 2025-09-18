@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Failed Banks</h1>
+
+<div class="map-wrapper p-3 mb-4 shadow-sm rounded" style="position: relative; width: 100%; padding-bottom: 60%;">
+  <div id="us-map" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+</div>
+
+<hr />
+
+<div class="container my-4">
+  <div class="row">
+    {% for col in columns %}
+    <div class="col-12 mb-3">
+      {% for state_name, banks_in_state in col %}
+      <h5>{{ state_name }}</h5>
+      <ul class="list-unstyled">
+        {% for bank in banks_in_state %}
+        <li><a href="{{ bank.url }}">{{ bank.name }}</a></li>
+        {% endfor %}
+      </ul>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+<script src="https://datamaps.github.io/scripts/datamaps.usa.min.js"></script>
+<script>
+  var stateCounts = {{ state_counts | tojson }};
+
+  var map = new Datamap({
+    scope: 'usa',
+    responsive: true,
+    element: document.getElementById('us-map'),
+    fills: {
+      defaultFill: '#FCEEEF',
+      high: '#79151F',
+      medium: '#D02536',
+      low: '#E77480'
+    },
+    data: Object.fromEntries(
+      Object.entries(stateCounts).map(([st, val]) => {
+        let fillKey = val > 50 ? 'high' : val > 10 ? 'medium' : 'low';
+        return [st, { fillKey: fillKey, numberOfBanks: val }];
+      })
+    ),
+    geographyConfig: {
+      borderColor: '#000000',
+      borderWidth: 1,
+      highlightOnHover: true,
+      popupTemplate: function (geo, data) {
+        const name = geo.properties.name;
+        const count = data ? data.numberOfBanks : 0;
+        return `<div class="hoverinfo">${name}: ${count} failed banks</div>`;
+      }
+    },
+    done: function (datamap) {
+      datamap.svg.style("background-color", "#f8f9fa"); // light gray background
+
+      // Add click handler
+      datamap.svg.selectAll('.datamaps-subunit').on('click', function (geo) {
+        // Construct path for state page
+        var stateCode = geo.id; // e.g., 'CA'
+        var url = 'states/' + stateCode + '.html';
+        // Optional: check if page exists (simple fetch)
+        fetch(url, { method: 'HEAD' }).then(resp => {
+          if (resp.ok) window.location.href = url;
+        }).catch(() => { });
+      });
+    }
+  });
+
+  window.addEventListener('resize', function () {
+    map.resize();
+  });
+</script>
+{% endblock %}

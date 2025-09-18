@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Breadcrumbs -->
+<nav aria-label="breadcrumb" class="mt-2">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">State: {{ state }}</li>
+  </ol>
+</nav>
+
+<h1>State: {{ state }}</h1>
+
+{% if banks %}
+<ul class="list-unstyled">
+  {% for bank in banks %}
+  <li><a href="../{{ bank.url }}">{{ bank.name }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No failed banks in this state.</p>
+{% endif %}
+
+
+{% endblock %}
